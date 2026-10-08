@@ -2,6 +2,11 @@
   "https://amanda.thewahlstedts.com/": {
     "avatar": "images/AJWHeadshot2026.jpg",
     "color": "#7c83bc",
+    "cursor": "https://cdn.cursors-4u.net/previews/nintendo-gamecube-2-5b106fc8-32.webp",
+    "cursorHotspot": [
+      32,
+      32
+    ],
     "name": "Amanda",
     "tagline": "Exploring the pathways to postsecondary opportunity."
   },
