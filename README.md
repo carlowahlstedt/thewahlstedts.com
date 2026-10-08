@@ -7,3 +7,40 @@ Landing page for [thewahlstedts.com](https://thewahlstedts.com), linking to:
 - [edub-is-cool.github.io/games](https://edub-is-cool.github.io/games/) — Ephraim's site
 
 Static HTML served by GitHub Pages. `404.html` forwards any old blog URL (e.g. `thewahlstedts.com/2020-01-01-some-post/`) to the same path on `carlo.thewahlstedts.com`.
+
+## Your card: `wahlstedt.json`
+
+Each person's card on the portal comes from a `wahlstedt.json` file at the root of their own site (e.g. `https://carlo.thewahlstedts.com/wahlstedt.json`). Change the file on your site and the portal picks it up on the next page load — no change to this repo needed.
+
+```json
+{
+  "name": "Carlo",
+  "tagline": "Code, coffee, and the occasional blog post.",
+  "color": "#00a5ff",
+  "avatar": "img/avatar-icon.jpg",
+  "url": "/"
+}
+```
+
+Every field is optional:
+
+| Field     | What it does                                                          |
+|-----------|-----------------------------------------------------------------------|
+| `name`    | Heading on the card.                                                  |
+| `tagline` | Short line under the name. Plain text.                                |
+| `color`   | Accent color for the card's top border (any CSS color).               |
+| `avatar`  | Round image above the name. Relative to your site, or a full URL.     |
+| `url`     | Where the card links. Relative to your site, or a full URL. Defaults to your site's home page. |
+
+The portal fetches the file from the browser, so your site must allow cross-origin requests for it. GitHub Pages does this already. On Cloudflare Pages, add a `_headers` file:
+
+```
+/wahlstedt.json
+  Access-Control-Allow-Origin: *
+```
+
+If the file is missing or can't be read, the card still shows, using the name and color listed in `SITES` in `index.html`.
+
+### Adding a new Wahlstedt
+
+Add an entry to `SITES` in `index.html` with the site's base URL (ending in `/`) and a fallback name and color.
