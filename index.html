@@ -15,9 +15,6 @@
       --muted: #6b665e;
       --card: #ffffff;
       --border: #e6e1d8;
-      --carlo: #00a5ff;
-      --amanda: #fc5a20;
-      --ephraim: #2bb673;
     }
     @media (prefers-color-scheme: dark) {
       :root {
@@ -62,7 +59,7 @@
       padding: 28px 24px;
       background: var(--card);
       border: 1px solid var(--border);
-      border-top: 4px solid var(--accent);
+      border-top: 4px solid var(--accent, var(--border));
       border-radius: 12px;
       color: inherit;
       text-decoration: none;
@@ -79,10 +76,15 @@
       font-size: 1.6rem;
       margin: 0 0 6px;
     }
-    a.site .url { color: var(--accent); font-size: 0.95rem; font-weight: 500; }
-    .carlo { --accent: var(--carlo); }
-    .amanda { --accent: var(--amanda); }
-    .ephraim { --accent: var(--ephraim); }
+    a.site .avatar {
+      display: block;
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 14px;
+    }
+    a.site .tagline { margin: 0; color: var(--muted); font-size: 0.95rem; line-height: 1.45; }
     footer { margin-top: 48px; color: var(--muted); font-size: 0.85rem; }
   </style>
 </head>
@@ -91,20 +93,53 @@
     <h1>The Wahlstedts</h1>
     <p>Pick a Wahlstedt.</p>
   </header>
-  <main>
-    <a class="site carlo" href="https://carlo.thewahlstedts.com">
-      <h2>Carlo</h2>
-      <span class="url">carlo.thewahlstedts.com &rarr;</span>
-    </a>
-    <a class="site amanda" href="https://amanda.thewahlstedts.com">
-      <h2>Amanda</h2>
-      <span class="url">amanda.thewahlstedts.com &rarr;</span>
-    </a>
-    <a class="site ephraim" href="https://edub-is-cool.github.io/games/">
-      <h2>Ephraim</h2>
-      <span class="url">edub-is-cool.github.io/games &rarr;</span>
-    </a>
-  </main>
+  <main id="sites"></main>
+  <script>
+    // Each Wahlstedt publishes /wahlstedt.json at the root of their site.
+    // The portal reads it to render their card; fields fall back to the values here.
+    var SITES = [
+      { base: "https://carlo.thewahlstedts.com/", name: "Carlo", color: "#00a5ff" },
+      { base: "https://amanda.thewahlstedts.com/", name: "Amanda", color: "#fc5a20" },
+      { base: "https://edub-is-cool.github.io/games/", name: "Ephraim", color: "#2bb673" }
+    ];
+
+    var main = document.getElementById("sites");
+
+    SITES.forEach(function (site) {
+      var card = document.createElement("a");
+      card.className = "site";
+      card.href = site.base;
+      var name = document.createElement("h2");
+      var tagline = document.createElement("p");
+      tagline.className = "tagline";
+      card.appendChild(name);
+      card.appendChild(tagline);
+      main.appendChild(card);
+
+      function render(info) {
+        var link = info.url ? new URL(info.url, site.base).href : site.base;
+        card.href = link;
+        card.style.setProperty("--accent", info.color || site.color);
+        name.textContent = info.name || site.name;
+        tagline.textContent = info.tagline || "";
+        tagline.hidden = !info.tagline;
+        if (info.avatar && !card.querySelector("img")) {
+          var img = document.createElement("img");
+          img.className = "avatar";
+          img.alt = "";
+          img.src = new URL(info.avatar, site.base).href;
+          img.onerror = function () { img.remove(); };
+          card.insertBefore(img, name);
+        }
+      }
+
+      render({});
+      fetch(new URL("wahlstedt.json", site.base).href, { cache: "no-cache" })
+        .then(function (r) { return r.ok ? r.json() : {}; })
+        .then(render)
+        .catch(function () {});
+    });
+  </script>
   <footer>&copy; <script>document.write(new Date().getFullYear())</script> The Wahlstedts</footer>
 </body>
 </html>
