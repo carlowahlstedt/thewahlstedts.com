@@ -112,16 +112,18 @@
   <main id="sites"></main>
   <script>
     // Each Wahlstedt publishes /wahlstedt.json at the root of their site.
-    // The portal reads it to render their card; fields fall back to the values here.
-    var SITES = [
-      { base: "https://carlo.thewahlstedts.com/", name: "Carlo", color: "#00a5ff" },
-      { base: "https://amanda.thewahlstedts.com/", name: "Amanda", color: "#fc5a20" },
-      { base: "https://edub-is-cool.github.io/games/", name: "Ephraim", color: "#2bb673" }
-    ];
-
+    // sites.json lists the sites (with fallback name/color), cards.json is an
+    // hourly cached copy of everyone's wahlstedt.json (see .github/workflows),
+    // and a live fetch overrides the cache for sites that allow CORS.
     var main = document.getElementById("sites");
 
-    SITES.forEach(function (site) {
+    function getJSON(url) {
+      return fetch(url, { cache: "no-cache" })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .catch(function () { return null; });
+    }
+
+    function addCard(site, cached) {
       var card = document.createElement("a");
       card.className = "site";
       card.href = site.base;
@@ -133,27 +135,36 @@
       main.appendChild(card);
 
       function render(info) {
-        var link = info.url ? new URL(info.url, site.base).href : site.base;
-        card.href = link;
+        card.href = info.url ? new URL(info.url, site.base).href : site.base;
         card.style.setProperty("--accent", info.color || site.color);
         name.textContent = info.name || site.name;
         tagline.textContent = info.tagline || "";
         tagline.hidden = !info.tagline;
-        if (info.avatar && !card.querySelector("img")) {
-          var img = document.createElement("img");
+        var img = card.querySelector("img");
+        if (!info.avatar) {
+          if (img) img.remove();
+          return;
+        }
+        if (!img) {
+          img = document.createElement("img");
           img.className = "avatar";
           img.alt = "";
-          img.src = new URL(info.avatar, site.base).href;
           img.onerror = function () { img.remove(); };
           card.insertBefore(img, name);
         }
+        img.src = new URL(info.avatar, site.base).href;
       }
 
-      render({});
-      fetch(new URL("wahlstedt.json", site.base).href, { cache: "no-cache" })
-        .then(function (r) { return r.ok ? r.json() : {}; })
-        .then(render)
-        .catch(function () {});
+      render(cached || {});
+      getJSON(new URL("wahlstedt.json", site.base).href).then(function (live) {
+        if (live) render(live);
+      });
+    }
+
+    Promise.all([getJSON("sites.json"), getJSON("cards.json")]).then(function (res) {
+      var sites = res[0] || [];
+      var cards = res[1] || {};
+      sites.forEach(function (site) { addCard(site, cards[site.base]); });
     });
   </script>
   <footer>&copy; <script>document.write(new Date().getFullYear())</script> The Wahlstedts</footer>
