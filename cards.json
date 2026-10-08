@@ -1,0 +1,14 @@
+{
+  "https://amanda.thewahlstedts.com/": {
+    "avatar": "images/AJWHeadshot2026.jpg",
+    "color": "#7c83bc",
+    "name": "Amanda",
+    "tagline": "Exploring the pathways to postsecondary opportunity."
+  },
+  "https://carlo.thewahlstedts.com/": {
+    "avatar": "img/avatar-icon.jpg",
+    "color": "#00a5ff",
+    "name": "Carlo",
+    "tagline": "Blog posts, side projects, and little apps."
+  }
+}
