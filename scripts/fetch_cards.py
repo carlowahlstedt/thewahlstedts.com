@@ -8,7 +8,16 @@ import json
 import urllib.request
 from urllib.parse import urljoin
 
-FIELDS = ("name", "tagline", "color", "avatar", "url")
+FIELDS = ("name", "tagline", "color", "avatar", "url", "cursor")
+
+
+def hotspot(value):
+    """Return value if it's [x, y] with two non-negative numbers, else None."""
+    if (isinstance(value, list) and len(value) == 2
+            and all(isinstance(n, (int, float)) and not isinstance(n, bool)
+                    and 0 <= n < float("inf") for n in value)):
+        return value
+    return None
 
 with open("sites.json") as f:
     sites = json.load(f)
@@ -29,7 +38,10 @@ for site in sites:
             data = json.load(r)
         if not isinstance(data, dict):
             raise ValueError("not a JSON object")
-        cards[base] = {k: data[k] for k in FIELDS if isinstance(data.get(k), str)}
+        card = {k: data[k] for k in FIELDS if isinstance(data.get(k), str)}
+        if hotspot(data.get("cursorHotspot")) is not None:
+            card["cursorHotspot"] = data["cursorHotspot"]
+        cards[base] = card
         print(f"ok   {src}")
     except Exception as e:
         print(f"fail {src}: {e}")

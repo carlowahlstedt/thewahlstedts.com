@@ -123,6 +123,32 @@
         .catch(function () { return null; });
     }
 
+    // Standard CSS cursor keywords a card may use instead of an image.
+    var CURSOR_KEYWORDS = ["auto", "default", "pointer", "crosshair", "help",
+      "grab", "grabbing", "move", "text", "wait", "progress", "not-allowed",
+      "zoom-in", "zoom-out", "cell", "copy", "alias", "context-menu"];
+
+    // Turn a card's cursor/cursorHotspot into a CSS cursor value, or "".
+    function cursorValue(info, base) {
+      var value = info.cursor;
+      if (typeof value !== "string" || !value.trim()) return "";
+      var keyword = value.trim().toLowerCase();
+      if (CURSOR_KEYWORDS.indexOf(keyword) !== -1) return keyword;
+      var url;
+      try { url = new URL(value, base); } catch (e) { return ""; }
+      if (url.protocol !== "http:" && url.protocol !== "https:") return "";
+      var css = 'url("' + url.href.replace(/["\\\n\r\f]/g, function (c) {
+        return "\\" + c.charCodeAt(0).toString(16) + " ";
+      }) + '")';
+      var hot = info.cursorHotspot;
+      if (Array.isArray(hot) && hot.length === 2 && hot.every(function (n) {
+        return typeof n === "number" && isFinite(n) && n >= 0;
+      })) {
+        css += " " + hot[0] + " " + hot[1];
+      }
+      return css + ", pointer";
+    }
+
     function addCard(site, cached) {
       var card = document.createElement("a");
       card.className = "site";
@@ -140,6 +166,8 @@
         name.textContent = info.name || site.name;
         tagline.textContent = info.tagline || "";
         tagline.hidden = !info.tagline;
+        card.style.cursor = "";
+        card.style.cursor = cursorValue(info, site.base);
         var img = card.querySelector("img");
         if (!info.avatar) {
           if (img) img.remove();
