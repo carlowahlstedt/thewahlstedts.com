@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>The Wahlstedts</title>
-  <meta name="description" content="Home of the Wahlstedts. Visit Carlo's or Amanda's site.">
+  <meta name="description" content="Home of the Wahlstedts. Visit Carlo's, Amanda's, or Ephraim's site.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
@@ -17,6 +17,7 @@
       --border: #e6e1d8;
       --carlo: #00a5ff;
       --amanda: #fc5a20;
+      --ephraim: #2bb673;
     }
     @media (prefers-color-scheme: dark) {
       :root {
@@ -51,10 +52,10 @@
     header p { margin: 0; color: var(--muted); font-size: 1.05rem; }
     main {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 20px;
       width: 100%;
-      max-width: 640px;
+      max-width: 860px;
     }
     a.site {
       display: block;
@@ -81,6 +82,7 @@
     a.site .url { color: var(--accent); font-size: 0.95rem; font-weight: 500; }
     .carlo { --accent: var(--carlo); }
     .amanda { --accent: var(--amanda); }
+    .ephraim { --accent: var(--ephraim); }
     footer { margin-top: 48px; color: var(--muted); font-size: 0.85rem; }
   </style>
 </head>
@@ -97,6 +99,10 @@
     <a class="site amanda" href="https://amanda.thewahlstedts.com">
       <h2>Amanda</h2>
       <span class="url">amanda.thewahlstedts.com &rarr;</span>
+    </a>
+    <a class="site ephraim" href="https://edub-is-cool.github.io/games/">
+      <h2>Ephraim</h2>
+      <span class="url">edub-is-cool.github.io/games &rarr;</span>
     </a>
   </main>
   <footer>&copy; <script>document.write(new Date().getFullYear())</script> The Wahlstedts</footer>
