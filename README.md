@@ -6,7 +6,7 @@ Landing page for [thewahlstedts.com](https://thewahlstedts.com), linking to:
 - [amanda.thewahlstedts.com](https://amanda.thewahlstedts.com) — Amanda's site
 - [edub-is-cool.github.io/games](https://edub-is-cool.github.io/games/) — Ephraim's site
 
-Static HTML served by GitHub Pages. `404.html` forwards any old blog URL (e.g. `thewahlstedts.com/2020-01-01-some-post/`) to the same path on `carlo.thewahlstedts.com`.
+Static HTML served by GitHub Pages. `logo.svg` is the family logo (indigo `w_`), used above the title and as the favicon; `favicon-32.png` and `apple-touch-icon.png` are PNGs rendered from it for browsers and iOS home screens that don't use SVG icons. The source is in Google Drive ("thewahlstedts logo" folder). `404.html` forwards any old blog URL (e.g. `thewahlstedts.com/2020-01-01-some-post/`) to the same path on `carlo.thewahlstedts.com`.
 
 ## Your card: `wahlstedt.json`
 
